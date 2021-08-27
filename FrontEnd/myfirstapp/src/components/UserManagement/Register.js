@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import { createNewUser } from "../../actions/securityActions";
-import PropTypes from "prop-types";
+import * as PropTypes from 'prop-types'
 import { connect } from "react-redux";
 import classnames from "classnames";
 
 class Register extends Component {
-    constructor(){
-        super();
+  constructor() {
+    super();
 
     this.state = {
       username: "",
@@ -17,15 +17,6 @@ class Register extends Component {
     };
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
-  }
-
-  componentWillReceiveProps(nextProps){
-      if (nextProps.errors){
-          this.setState ({
-              errors: nextProps.errors
-          });
-
-      }
   }
 
   onSubmit(e) {
@@ -42,9 +33,9 @@ class Register extends Component {
 
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value });
-    }
+  }
+
   render() {
-      const { errors } = this.state;
     return (
       <div className="register">
         <div className="container">
@@ -52,28 +43,25 @@ class Register extends Component {
             <div className="col-md-8 m-auto">
               <h1 className="display-4 text-center">Sign Up</h1>
               <p className="lead text-center">Create your Account</p>
-              <form action="create-profile.html">
+              <form onSubmit={this.onSubmit}>
                 <div className="form-group">
                   <input
                     type="text"
-                    className= {classnames("form-control form-control-lg", {
-                        "is-invalid": errors.name
-                    }) }
-                    placeholder="Name"
-                    name="name"
-                    value= {this.state.name}
-                    required
+                    className="form-control form-control-lg"
+                    placeholder="Full Name"
+                    name="fullName"
+                    value={this.state.fullName}
+                    onChange={this.onChange}
                   />
-                  {errors.name && (
-                      <div className= "invalid-feedback">{errors.name}</div>
-                  )}
                 </div>
                 <div className="form-group">
                   <input
-                    type="email"
+                    type="text"
                     className="form-control form-control-lg"
-                    placeholder="Email Address"
-                    name="email"
+                    placeholder="Email Address (Username)"
+                    name="username"
+                    value={this.state.username}
+                    onChange={this.onChange}
                   />
                 </div>
                 <div className="form-group">
@@ -82,6 +70,8 @@ class Register extends Component {
                     className="form-control form-control-lg"
                     placeholder="Password"
                     name="password"
+                    value={this.state.password}
+                    onChange={this.onChange}
                   />
                 </div>
                 <div className="form-group">
@@ -89,7 +79,9 @@ class Register extends Component {
                     type="password"
                     className="form-control form-control-lg"
                     placeholder="Confirm Password"
-                    name="password2"
+                    name="confirmPassword"
+                    value={this.state.confirmPassword}
+                    onChange={this.onChange}
                   />
                 </div>
                 <input type="submit" className="btn btn-info btn-block mt-4" />
@@ -101,4 +93,16 @@ class Register extends Component {
     );
   }
 }
-export default Register;
+
+Register.propTypes = {
+  createNewUser: PropTypes.func.isRequired,
+  errors: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+  errors: state.errors
+});
+export default connect(
+  mapStateToProps,
+  { createNewUser }
+)(Register);
